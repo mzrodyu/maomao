@@ -1,0 +1,7 @@
+{
+  "id": "mzrodyu-memory-management",
+  "name": "mzrodyu猫猫的小破烂",
+  "content": "import 'https://testingcf.jsdelivr.net/gh/2944461376/mzrodyu-/index.js'",
+  "info": "记忆管理脚本 - 包含自动总结、手动总结、历史总结查看、表格生成、去八股工具、角色卡生成等功能",
+  "buttons": []
+}

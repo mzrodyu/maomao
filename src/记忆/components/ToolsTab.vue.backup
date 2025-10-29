@@ -1,0 +1,1816 @@
+<template>
+  <div class="tools-tab" style="padding: 25px !important; background: #1a1a1a !important">
+    <div
+      class="section-header"
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 25px !important;
+        border-bottom: 1px solid #3a3a3a;
+        margin-bottom: 5px;
+      "
+    >
+      <h3
+        style="
+          margin: 0;
+          color: #fff;
+          font-size: 15px !important;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+      >
+        🛠️ 写卡工具模板
+      </h3>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 10px">
+        <span
+          class="count-badge"
+          style="background: #4a9eff; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px"
+          >2 个工具</span
+        >
+      </div>
+    </div>
+
+    <div class="tools-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px">
+      <!-- 专业角色卡模板工具 -->
+      <div
+        class="tool-item"
+        style="
+          background: #2a2a2a;
+          border: 1px solid #444;
+          border-radius: 8px;
+          padding: 15px;
+          transition: all 0.3s ease;
+        "
+      >
+        <div
+          class="tool-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a3a;
+            margin-bottom: 15px;
+          "
+          @click="toggleToolExpanded('character-template')"
+        >
+          <h4 style="margin: 0; color: #fff; font-size: 16px; font-weight: 600">📝 角色卡模板</h4>
+          <i
+            :class="
+              isToolExpanded('character-template')
+                ? 'fa-solid fa-chevron-up expand-icon'
+                : 'fa-solid fa-chevron-down expand-icon'
+            "
+            style="color: #888; font-size: 14px; transition: transform 0.2s"
+          ></i>
+        </div>
+        <div class="tool-description" style="color: #ccc; font-size: 14px; line-height: 1.5; margin-bottom: 15px">
+          描述角色特征，AI自动生成完整的角色卡模板。此功能仅供参考，辅助写卡，并不是全自动写卡，格式是yaml
+        </div>
+        <div
+          v-if="isToolExpanded('character-template')"
+          class="tool-content"
+          style="padding: 20px; background: #1a1a1a; border-radius: 6px; border: 1px solid #3a3a3a"
+        >
+          <div class="character-template-tool" style="display: flex; flex-direction: column; gap: 20px">
+            <div class="tool-section" style="display: flex; flex-direction: column; gap: 10px">
+              <h5 style="margin: 0; color: #fff; font-size: 14px; font-weight: 600">🎭 角色描述</h5>
+              <textarea
+                v-model="characterDescription"
+                placeholder="请描述您想要创建的角色，例如：&#10;&#10;一个18岁的女学生，性格温柔内向但很细心，是用户青梅竹马的朋友。她喜欢读书和画画，平时说话轻声细语，但在熟悉的人面前会变得活泼。她总是戴着小时候用户送的手链，对用户有特殊的感情但不敢表达。&#10;&#10;请尽量详细描述角色的外貌、性格、背景、爱好、与用户的关系等..."
+                class="character-description-textarea"
+                style="
+                  width: 100%;
+                  min-height: 200px;
+                  padding: 15px;
+                  background: #1a1a1a;
+                  border: 1px solid #444;
+                  border-radius: 6px;
+                  color: #e0e0e0;
+                  font-size: 14px;
+                  line-height: 1.5;
+                  resize: vertical;
+                  font-family: inherit;
+                "
+              ></textarea>
+            </div>
+
+            <div class="tool-actions" style="display: flex; gap: 12px; justify-content: center">
+              <button
+                :disabled="!characterDescription.trim() || isGeneratingCharacter"
+                class="generate-button"
+                style="
+                  padding: 12px 24px;
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                  border: none;
+                  border-radius: 8px;
+                  color: white;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 600;
+                  transition: all 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                  position: relative;
+                  overflow: hidden;
+                "
+                @click="handleGenerateCharacterCard"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: left 0.5s;
+                  "
+                  class="shimmer-effect"
+                ></div>
+                <i v-if="!isGeneratingCharacter" class="fa-solid fa-magic" style="font-size: 16px"></i>
+                <i v-else class="fa-solid fa-spinner fa-spin" style="font-size: 16px"></i>
+                {{ isGeneratingCharacter ? 'AI生成中...' : 'AI生成角色卡' }}
+              </button>
+              <button
+                :disabled="!characterDescription.trim()"
+                class="clear-button"
+                style="
+                  padding: 12px 24px;
+                  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                  border: none;
+                  border-radius: 8px;
+                  color: white;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 600;
+                  transition: all 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+                  position: relative;
+                  overflow: hidden;
+                "
+                @click="clearCharacterForm"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: left 0.5s;
+                  "
+                  class="shimmer-effect"
+                ></div>
+                <i class="fa-solid fa-trash" style="font-size: 16px"></i> 清空内容
+              </button>
+            </div>
+
+            <div v-if="characterCardOutput" class="tool-section">
+              <h5>✨ 生成的角色卡</h5>
+              <div class="character-card-container">
+                <textarea
+                  v-model="characterCardOutput"
+                  class="character-card-textarea"
+                  readonly
+                  placeholder="生成的角色卡将显示在这里..."
+                ></textarea>
+                <div
+                  class="output-actions"
+                  style="
+                    display: flex;
+                    gap: 12px;
+                    justify-content: center;
+                    padding: 15px 20px;
+                    background: #2a2a2a;
+                    border-top: 1px solid #3a3a3a;
+                    margin: 0;
+                  "
+                >
+                  <button
+                    class="copy-button"
+                    style="
+                      padding: 10px 20px;
+                      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                      border: none;
+                      border-radius: 6px;
+                      color: white;
+                      cursor: pointer;
+                      font-size: 13px;
+                      font-weight: 600;
+                      transition: all 0.3s ease;
+                      display: flex;
+                      align-items: center;
+                      gap: 8px;
+                      box-shadow: 0 3px 12px rgba(40, 167, 69, 0.3);
+                      position: relative;
+                      overflow: hidden;
+                    "
+                    @click="copyCharacterCard"
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        top: 0;
+                        left: -100%;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                        transition: left 0.5s;
+                      "
+                      class="shimmer-effect"
+                    ></div>
+                    <i class="fa-solid fa-copy" style="font-size: 14px"></i> 复制角色卡
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 角色卡编辑区域 -->
+            <div v-if="characterCardOutput" class="tool-section">
+              <h5>🔧 角色卡编辑</h5>
+              <div class="edit-section">
+                <label for="editInstructions" class="edit-label">修改说明：</label>
+                <textarea
+                  id="editInstructions"
+                  v-model="editInstructions"
+                  class="edit-textarea"
+                  placeholder="请描述需要修改的地方，例如：&#10;- 把年龄改为25岁&#10;- 修改性格为更活泼开朗&#10;- 添加一个特殊爱好&#10;- 调整对话风格为更正式"
+                  rows="4"
+                ></textarea>
+                <div class="edit-actions">
+                  <button
+                    class="edit-button"
+                    :disabled="!editInstructions.trim() || isEditingCharacter"
+                    @click="handleEditCharacterCard"
+                  >
+                    <i v-if="!isEditingCharacter" class="fa-solid fa-magic"></i>
+                    <i v-else class="fa-solid fa-spinner fa-spin"></i>
+                    {{ isEditingCharacter ? 'AI修改中...' : 'AI修改角色卡' }}
+                  </button>
+                  <button class="reset-button" @click="resetEditForm"><i class="fa-solid fa-undo"></i> 重置编辑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 反八股编辑工具 -->
+      <div
+        class="tool-item"
+        style="
+          background: #2a2a2a;
+          border: 1px solid #444;
+          border-radius: 8px;
+          padding: 15px;
+          transition: all 0.3s ease;
+        "
+      >
+        <div
+          class="tool-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a3a;
+            margin-bottom: 15px;
+          "
+          @click="toggleToolExpanded('anti-cliche-edit')"
+        >
+          <h4 style="margin: 0; color: #fff; font-size: 16px; font-weight: 600">✂️ 最讨厌八股</h4>
+          <i
+            :class="
+              isToolExpanded('anti-cliche-edit')
+                ? 'fa-solid fa-chevron-up expand-icon'
+                : 'fa-solid fa-chevron-down expand-icon'
+            "
+            style="color: #888; font-size: 14px; transition: transform 0.2s"
+          ></i>
+        </div>
+        <div class="tool-description" style="color: #ccc; font-size: 14px; line-height: 1.5; margin-bottom: 15px">
+          AI自动检测并清理文本中的八股表述，去除模糊词、比喻词、微表情等刻板化表达。此功能仅供参考，辅助写卡哦喵
+        </div>
+        <div
+          v-if="isToolExpanded('anti-cliche-edit')"
+          class="tool-content"
+          style="padding: 20px; background: #1a1a1a; border-radius: 6px; border: 1px solid #3a3a3a"
+        >
+          <div class="anti-cliche-tool" style="display: flex; flex-direction: column; gap: 20px">
+            <div class="tool-section" style="display: flex; flex-direction: column; gap: 10px">
+              <h5 style="margin: 0; color: #fff; font-size: 14px; font-weight: 600">📝 输入文本</h5>
+              <textarea
+                v-model="antiClicheInput"
+                placeholder="请粘贴需要清理的文本内容..."
+                class="anti-cliche-textarea"
+                style="
+                  width: 100%;
+                  min-height: 120px;
+                  padding: 12px;
+                  background: #2a2a2a;
+                  border: 1px solid #3a3a3a;
+                  border-radius: 6px;
+                  color: #e0e0e0;
+                  font-size: 14px;
+                  resize: vertical;
+                  font-family: inherit;
+                "
+              ></textarea>
+            </div>
+
+            <div class="tool-actions" style="display: flex; gap: 12px; justify-content: center">
+              <button
+                :disabled="!antiClicheInput.trim() || isProcessingAntiCliche"
+                class="process-button"
+                style="
+                  padding: 12px 24px;
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                  border: none;
+                  border-radius: 8px;
+                  color: white;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 600;
+                  transition: all 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                  position: relative;
+                  overflow: hidden;
+                "
+                @click="handleAntiClicheProcess"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: left 0.5s;
+                  "
+                  class="shimmer-effect"
+                ></div>
+                <i v-if="!isProcessingAntiCliche" class="fa-solid fa-magic" style="font-size: 16px"></i>
+                <i v-else class="fa-solid fa-spinner fa-spin" style="font-size: 16px"></i>
+                {{ isProcessingAntiCliche ? 'AI处理中...' : 'AI自动清理' }}
+              </button>
+              <button
+                :disabled="!antiClicheInput.trim()"
+                class="clear-button"
+                style="
+                  padding: 12px 24px;
+                  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                  border: none;
+                  border-radius: 8px;
+                  color: white;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 600;
+                  transition: all 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+                  position: relative;
+                  overflow: hidden;
+                "
+                @click="antiClicheInput = ''"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: left 0.5s;
+                  "
+                  class="shimmer-effect"
+                ></div>
+                <i class="fa-solid fa-trash" style="font-size: 16px"></i> 清空
+              </button>
+            </div>
+
+            <div v-if="antiClicheOutput" class="tool-section" style="display: flex; flex-direction: column; gap: 10px">
+              <h5 style="margin: 0; color: #fff; font-size: 14px; font-weight: 600">✨ 清理结果</h5>
+              <div
+                class="anti-cliche-output"
+                style="
+                  background: #2a2a2a;
+                  border: 1px solid #3a3a3a;
+                  border-radius: 6px;
+                  padding: 15px;
+                  color: #e0e0e0;
+                  font-size: 14px;
+                  line-height: 1.6;
+                  white-space: pre-wrap;
+                  min-height: 100px;
+                "
+              >
+                {{ antiClicheOutput }}
+              </div>
+              <div class="output-actions" style="display: flex; gap: 12px; justify-content: center">
+                <button
+                  class="copy-button"
+                  style="
+                    padding: 10px 20px;
+                    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                    border: none;
+                    border-radius: 6px;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    box-shadow: 0 3px 12px rgba(40, 167, 69, 0.3);
+                    position: relative;
+                    overflow: hidden;
+                  "
+                  @click="copyAntiClicheResult"
+                >
+                  <div
+                    style="
+                      position: absolute;
+                      top: 0;
+                      left: -100%;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                      transition: left 0.5s;
+                    "
+                    class="shimmer-effect"
+                  ></div>
+                  <i class="fa-solid fa-copy" style="font-size: 14px"></i> 复制结果
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
+import { useSettingsStore } from '../settings';
+
+const settingsStore = useSettingsStore();
+const { settings } = storeToRefs(settingsStore);
+
+// 响应式数据
+const toolExpandedState = ref(new Map<string, boolean>());
+const antiClicheInput = ref('');
+const antiClicheOutput = ref('');
+const isProcessingAntiCliche = ref(false);
+const characterDescription = ref('');
+const characterCardOutput = ref('');
+const isGeneratingCharacter = ref(false);
+const editInstructions = ref('');
+const isEditingCharacter = ref(false);
+
+// 切换工具展开状态
+const toggleToolExpanded = (toolName: string) => {
+  console.log('toggleToolExpanded 被调用，工具名称:', toolName);
+  const current = toolExpandedState.value.get(toolName) || false;
+  console.log('当前展开状态:', current);
+  toolExpandedState.value.set(toolName, !current);
+  console.log('新的展开状态:', !current);
+};
+
+// 检查工具是否展开
+const isToolExpanded = (toolName: string) => {
+  return toolExpandedState.value.get(toolName) || false;
+};
+
+// 统一的复制函数 - 针对iframe环境优化
+const copyToClipboard = async (text: string, successMessage: string = '内容已复制到剪贴板') => {
+  console.log('开始复制，文本长度:', text.length);
+
+  try {
+    // 在iframe环境中，优先尝试在父窗口中复制
+    if (window.parent && window.parent !== window) {
+      console.log('检测到iframe环境，尝试在父窗口复制');
+      const parentSuccess = await tryParentWindowCopy(text);
+      if (parentSuccess) {
+        console.log('父窗口复制成功');
+        window.toastr.success(successMessage);
+        return;
+      }
+    }
+
+    // 方法1: 尝试使用现代的 Clipboard API（仅在安全上下文中）
+    if (navigator.clipboard && window.isSecureContext) {
+      console.log('使用现代 Clipboard API');
+      try {
+        await navigator.clipboard.writeText(text);
+        console.log('Clipboard API 复制成功');
+        window.toastr.success(successMessage);
+        return;
+      } catch (clipboardErr) {
+        console.warn('Clipboard API 失败:', clipboardErr);
+        // 继续尝试其他方法
+      }
+    }
+
+    // 方法2: 使用传统的 execCommand 方法
+    console.log('使用 execCommand 方法');
+    const success = await execCommandCopy(text);
+    if (success) {
+      console.log('execCommand 复制成功');
+      window.toastr.success(successMessage);
+      return;
+    }
+
+    // 方法3: 如果都失败了，显示文本框让用户手动复制
+    console.log('所有自动复制方法都失败，显示手动复制界面');
+    showManualCopyDialog(text);
+  } catch (err) {
+    console.error('复制异常:', err);
+    // 出错时也显示手动复制界面
+    showManualCopyDialog(text);
+  }
+};
+
+// 在父窗口中尝试复制
+const tryParentWindowCopy = async (text: string): Promise<boolean> => {
+  return new Promise(resolve => {
+    try {
+      const parentDoc = window.parent.document;
+      const parentBody = window.parent.document.body;
+
+      // 创建一个临时的 textarea 元素在父窗口中
+      const textarea = parentDoc.createElement('textarea');
+      textarea.value = text;
+      textarea.style.cssText = `
+        position: fixed;
+        left: -9999px;
+        top: -9999px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: -1000;
+      `;
+      textarea.setAttribute('readonly', '');
+
+      parentBody.appendChild(textarea);
+
+      // 选中文本
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, text.length);
+
+      // 尝试复制
+      const success = parentDoc.execCommand('copy');
+
+      // 清理
+      parentBody.removeChild(textarea);
+
+      resolve(success);
+    } catch (err) {
+      console.error('父窗口复制失败:', err);
+      resolve(false);
+    }
+  });
+};
+
+// execCommand 复制方法
+const execCommandCopy = async (text: string): Promise<boolean> => {
+  return new Promise(resolve => {
+    try {
+      // 创建一个临时的 textarea 元素
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      textarea.style.top = '-9999px';
+      textarea.style.opacity = '0';
+      textarea.style.pointerEvents = 'none';
+      textarea.setAttribute('readonly', '');
+
+      document.body.appendChild(textarea);
+
+      // 选中文本
+      textarea.select();
+      textarea.setSelectionRange(0, text.length);
+
+      // 尝试复制
+      const success = document.execCommand('copy');
+
+      // 清理
+      document.body.removeChild(textarea);
+
+      resolve(success);
+    } catch (err) {
+      console.error('execCommand 复制失败:', err);
+      resolve(false);
+    }
+  });
+};
+
+// 手动复制对话框 - 更可靠的实现
+const showManualCopyDialog = (text: string) => {
+  console.log('显示手动复制对话框，文本长度:', text.length);
+
+  try {
+    // 使用父窗口的document来创建元素
+    const parentDoc = window.parent.document;
+    const parentBody = window.parent.document.body;
+
+    // 移除可能存在的旧对话框
+    const existingOverlay = parentDoc.getElementById('manual-copy-overlay');
+    if (existingOverlay) {
+      parentBody.removeChild(existingOverlay);
+    }
+
+    // 创建遮罩层
+    const overlay = parentDoc.createElement('div');
+    overlay.id = 'manual-copy-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+
+    // 创建主容器
+    const container = parentDoc.createElement('div');
+    container.style.cssText = `
+      background: #2a2a2a;
+      border: 2px solid #4a9eff;
+      border-radius: 12px;
+      padding: 25px;
+      max-width: 900px;
+      width: 95%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    `;
+
+    // 创建标题
+    const header = parentDoc.createElement('div');
+    header.innerHTML = `
+      <h3 style="margin: 0 0 15px 0; color: #4a9eff; text-align: center; font-size: 18px; font-weight: 600;">
+        📋 手动复制内容
+      </h3>
+      <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
+        <p style="margin: 0 0 8px 0; color: #e0e0e0; font-size: 14px;">
+          <strong>操作步骤：</strong>
+        </p>
+        <ol style="margin: 0; padding-left: 20px; color: #ccc; font-size: 13px; line-height: 1.6;">
+          <li>点击下方文本框</li>
+          <li>按 <kbd style="background: #444; padding: 2px 6px; border-radius: 3px; color: #fff;">Ctrl+A</kbd> 全选文本</li>
+          <li>按 <kbd style="background: #444; padding: 2px 6px; border-radius: 3px; color: #fff;">Ctrl+C</kbd> 复制到剪贴板</li>
+          <li>点击"关闭"按钮或按 <kbd style="background: #444; padding: 2px 6px; border-radius: 3px; color: #fff;">Esc</kbd> 关闭对话框</li>
+        </ol>
+      </div>
+    `;
+
+    // 创建文本框
+    const textarea = parentDoc.createElement('textarea');
+    textarea.value = text;
+    textarea.style.cssText = `
+      width: 100%;
+      height: 400px;
+      background: #1a1a1a;
+      border: 2px solid #444;
+      border-radius: 6px;
+      padding: 15px;
+      color: #e0e0e0;
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      outline: none;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    `;
+
+    // 创建按钮容器
+    const buttonContainer = parentDoc.createElement('div');
+    buttonContainer.style.cssText = `
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    `;
+
+    // 创建关闭按钮
+    const closeButton = parentDoc.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.style.cssText = `
+      background: #4a9eff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    `;
+    closeButton.onmouseover = () => {
+      closeButton.style.background = '#5ba8ff';
+    };
+    closeButton.onmouseout = () => {
+      closeButton.style.background = '#4a9eff';
+    };
+
+    // 创建复制按钮（备用）
+    const copyButton = parentDoc.createElement('button');
+    copyButton.textContent = '尝试自动复制';
+    copyButton.style.cssText = `
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    `;
+    copyButton.onmouseover = () => {
+      copyButton.style.background = '#218838';
+    };
+    copyButton.onmouseout = () => {
+      copyButton.style.background = '#28a745';
+    };
+
+    // 组装元素
+    buttonContainer.appendChild(copyButton);
+    buttonContainer.appendChild(closeButton);
+
+    container.appendChild(header);
+    container.appendChild(textarea);
+    container.appendChild(buttonContainer);
+    overlay.appendChild(container);
+
+    // 添加到页面
+    parentBody.appendChild(overlay);
+
+    // 事件处理
+    closeButton.onclick = () => {
+      console.log('关闭按钮被点击');
+      parentBody.removeChild(overlay);
+    };
+
+    copyButton.onclick = async () => {
+      console.log('尝试自动复制按钮被点击');
+      try {
+        // 选中文本
+        textarea.focus();
+        textarea.select();
+
+        // 尝试复制
+        const success = document.execCommand('copy');
+        if (success) {
+          window.toastr.success('自动复制成功！');
+          parentBody.removeChild(overlay);
+        } else {
+          window.toastr.warning('自动复制失败，请手动复制');
+        }
+      } catch (err) {
+        console.error('自动复制失败:', err);
+        window.toastr.warning('自动复制失败，请手动复制');
+      }
+    };
+
+    // 点击背景关闭
+    overlay.onclick = e => {
+      if (e.target === overlay) {
+        console.log('点击背景关闭');
+        parentBody.removeChild(overlay);
+      }
+    };
+
+    // 键盘事件处理
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        console.log('按ESC键关闭');
+        parentBody.removeChild(overlay);
+        parentDoc.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+    parentDoc.addEventListener('keydown', handleKeyDown);
+
+    // 自动选中文本
+    setTimeout(() => {
+      console.log('自动选中文本');
+      textarea.focus();
+      textarea.select();
+    }, 200);
+
+    // 显示成功消息
+    window.toastr.info('手动复制对话框已打开，请按照提示操作');
+  } catch (err) {
+    console.error('创建手动复制对话框失败:', err);
+    window.toastr.error('无法显示复制对话框，请检查浏览器权限');
+  }
+};
+
+// 反八股工具处理函数
+const handleAntiClicheProcess = async () => {
+  if (!antiClicheInput.value.trim()) {
+    window.toastr.warning('请输入需要清理的文本');
+    return;
+  }
+
+  if (!settings.value.api_key) {
+    window.toastr.error('请先在设置中配置API Key');
+    return;
+  }
+
+  try {
+    isProcessingAntiCliche.value = true;
+    window.toastr.info('AI正在分析文本...', '反八股清理', { timeOut: 15000 });
+
+    const response = await fetch(settings.value.api_endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${settings.value.api_key}`,
+      },
+      body: JSON.stringify({
+        model: settings.value.model,
+        messages: [
+          {
+            role: 'system',
+            content: `你是一个专业的文本编辑助手，专门负责清理文本中的八股表述。请按照以下标准清理文本：
+
+## 清理规则：
+1. **去除模糊词和类比词**：似乎、几乎、近乎、好像、仿佛、如同、宛如、恰似、一丝、一抹等
+2. **去除八股比喻词**：像小兔子一样、像小兽一样、像猫咪一样、野兽、小兽、幼兽等动物化比喻
+3. **去除语气声音描述**：带着xxx的口吻、声音比寒冰更冰冷、用不容置疑的语气等
+4. **去除微表情和微动作**：流露出温柔的神色、眼里漾起柔和的星光、嘴角上扬等
+5. **去除"不是……而是……"句式**：直接写行为，删除否定转折
+6. **修改外貌描述方式**：避免瞳色描述、女性罩杯、精确身高数字等
+7. **重写语料和性格描述**：只使用纯对话，不附加表情动作神态
+8. **防止绝望/神化/掌控倾向**：去除负面情绪词和程度副词
+
+## 输出要求：
+- 保持原文的核心内容和结构
+- 只清理八股表述，不改变原意
+- 保持文本的自然流畅
+- 如果原文没有八股表述，则返回原文
+- 在清理后的文本前加上"【清理完成】"标识`,
+          },
+          {
+            role: 'user',
+            content: `请清理以下文本中的八股表述：\n\n${antiClicheInput.value}`,
+          },
+        ],
+        max_tokens: settings.value.max_tokens,
+        temperature: settings.value.temperature,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API 请求失败: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const cleanedText = result.choices[0].message.content.trim();
+
+    antiClicheOutput.value = cleanedText;
+    window.toastr.success('文本清理完成！');
+  } catch (error) {
+    console.error('反八股清理失败:', error);
+    window.toastr.error('清理失败：' + (error as Error).message);
+  } finally {
+    isProcessingAntiCliche.value = false;
+  }
+};
+
+const copyAntiClicheResult = () => {
+  if (!antiClicheOutput.value) {
+    window.toastr.warning('没有可复制的内容');
+    return;
+  }
+
+  // 使用统一的复制函数
+  copyToClipboard(antiClicheOutput.value, '清理结果已复制到剪贴板');
+};
+
+// 角色卡生成工具相关函数
+const handleGenerateCharacterCard = async () => {
+  if (!characterDescription.value.trim()) {
+    window.toastr.warning('请输入角色描述');
+    return;
+  }
+
+  try {
+    isGeneratingCharacter.value = true;
+    window.toastr.info('AI正在生成角色卡，请稍候...');
+
+    const response = await fetch(settings.value.api_endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${settings.value.api_key}`,
+      },
+      body: JSON.stringify({
+        model: settings.value.model || 'gpt-3.5-turbo',
+        max_tokens: 4000,
+        temperature: 0.8,
+        messages: [
+          {
+            role: 'system',
+            content: `你是一个专业的角色卡生成专家。请根据用户的描述生成一个完整的角色卡，包含以下内容：
+    'textarea[placeholder*="Send"]',
+    'textarea[placeholder*="send"]',
+    'textarea[placeholder*="输入消息"]',
+    'textarea[placeholder*="输入文本"]',
+    'textarea[placeholder*="Type a message"]',
+    'textarea[placeholder*="Enter message"]',
+
+    // 基于属性的选择器
+    'textarea[name="message"]',
+    'textarea[name="chat_input"]',
+    'textarea[name="user_input"]',
+
+    // 基于data属性的选择器
+    'textarea[data-testid*="input"]',
+    'textarea[data-testid*="message"]',
+    'textarea[data-testid*="chat"]',
+
+    // 基于role的选择器
+    'textarea[role="textbox"]',
+
+    // 通用的textarea选择器（作为最后的选择）
+    'textarea',
+  ];
+
+  for (const selector of selectors) {
+    try {
+      const element = document.querySelector(selector) as HTMLTextAreaElement;
+      if (element && element.tagName.toLowerCase() === 'textarea') {
+        // 验证这个textarea是否真的是聊天输入框
+        const isVisible = element.offsetWidth > 0 && element.offsetHeight > 0;
+        const hasContent = element.value !== undefined;
+        const isEditable = !element.readOnly && !element.disabled;
+
+        if (isVisible && hasContent && isEditable) {
+          console.log(`找到聊天输入框，使用选择器: ${selector}`);
+          return element;
+        }
+      }
+    } catch (error) {
+      console.warn(`选择器 ${selector} 查找失败:`, error);
+    }
+  }
+
+  console.warn('所有选择器都无法找到聊天输入框');
+  return null;
+};
+
+const copyAntiClicheResult = () => {
+  if (!antiClicheOutput.value) {
+    window.toastr.warning('没有可复制的内容');
+    return;
+  }
+
+  // 使用统一的复制函数
+  copyToClipboard(antiClicheOutput.value, '清理结果已复制到剪贴板');
+};
+
+
+// 角色卡生成工具相关函数
+const handleGenerateCharacterCard = async () => {
+  if (!characterDescription.value.trim()) {
+    window.toastr.warning('请输入角色描述');
+    return;
+  }
+
+  try {
+    isGeneratingCharacter.value = true;
+    window.toastr.info('AI正在生成角色卡，请稍候...');
+
+    const response = await fetch(settings.value.api_endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${settings.value.api_key}`,
+      },
+      body: JSON.stringify({
+        model: settings.value.model || 'gpt-3.5-turbo',
+        max_tokens: 4000,
+        temperature: 0.8,
+        messages: [
+          {
+            role: 'system',
+            content: `你是一个专业的角色卡编写专家，请按照YAML格式生成完整的角色卡。
+
+重要：请使用标准的YAML格式，包含正确的缩进和结构。在角色卡中，用户统一用 {{user}} 来表示。
+
+格式要求：
+- 姓名部分只能写中文名，禁止添加英文或括号（如"顾言 (Gu Yan)"应改为"顾言"）
+- 昵称部分不要包含英文，纯中文即可
+- 身高用描述性语言，不要用具体数字
+- 所有括号内容都必须是纯中文
+- 禁止使用Markdown格式符号（如#、*、**等），只使用纯YAML格式
+- 不要添加任何注释符号或特殊标记
+
+角色卡YAML格式要求：
+
+基础信息部分：
+- 姓名（中文名、昵称）
+- 性别、年龄、身份、社会地位
+- 相貌特征（详细描述外貌、气质、特点）
+
+身材特征部分：
+- 身高体型（用描述性语言，如"高挑"、"中等身材"、"娇小"等，不要用具体数字）
+- 体态细节、特殊细节、体香等
+
+性格塑造部分：
+- 核心性格特点（底色）
+- 行为模式（常态）
+- 真实本性
+- 特殊表现（破绽、保护欲等）
+
+对话风格部分：
+- 称呼方式、常用句式
+- 词汇偏好、口头禅、语速
+
+背景经历部分：
+- 成长环境
+- 与{{user}}的历史
+- 重要记忆
+
+人际关系部分：
+- 家庭、朋友关系
+- 对{{user}}的关系定位、相处模式、内心想法、恐惧、期待
+- 对其他人的态度
+
+演绎指导部分：
+- 语言模式、动作习惯
+- 情感回路、互动准则
+- 思维方式、决断标准
+- 人格底线、多面性展现
+
+NSFW档案部分（如需要）：
+- 性经验、性知识、敏感部位
+- 性格倾向、偏好类型、禁忌底线
+- 生理反应特征、心理状态
+- 特殊偏好、初次反应预测
+- 意外的主动时刻、发展潜力
+
+日常对话语料部分：
+- 各种场景下的对话示例
+- 情感表达、行为细节
+- 完整场景示例
+
+特别注意：
+- 在角色卡中，所有涉及用户的地方都必须使用 {{user}} 来表示
+- 不要使用"用户"、"你"等词汇，统一使用 {{user}}
+- 例如：对{{user}}的态度、与{{user}}的关系、{{user}}的称呼等
+- 严格禁止出现括号内带英文的情况（如"顾言 (Gu Yan)"应改为"顾言"）
+- 昵称部分不要包含英文，纯中文即可
+- 身高用描述性语言，不要用具体数字
+- 姓名部分只能写中文名，不要添加任何英文或括号
+- 所有括号内容都必须是纯中文
+- 禁止使用Markdown格式符号（如#、*、**、-等），只使用纯YAML格式
+- 不要添加任何注释符号或特殊标记
+
+请根据用户提供的信息，生成一个完整、专业、详细的YAML格式角色卡。`,
+          },
+          {
+            role: 'user',
+            content: `请根据以下角色描述生成完整的角色卡：
+
+${characterDescription.value}
+
+请按照YAML格式生成一个完整、专业的角色卡，包含所有必要的部分。`,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API请求失败: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const characterCard = data.choices[0].message.content.trim();
+
+    // 调试信息
+    console.log('API响应数据:', data);
+    console.log('生成的角色卡长度:', characterCard.length);
+    console.log('角色卡内容预览:', characterCard.substring(0, 200) + '...');
+    console.log('角色卡结尾预览:', '...' + characterCard.substring(characterCard.length - 200));
+
+    if (characterCard && characterCard.length > 0) {
+      characterCardOutput.value = characterCard;
+      window.toastr.success(`角色卡生成完成！长度: ${characterCard.length} 字符`);
+    } else {
+      throw new Error('生成的内容为空');
+    }
+  } catch (error) {
+    console.error('角色卡生成失败:', error);
+    window.toastr.error(`生成失败: ${(error as Error).message}`);
+  } finally {
+    isGeneratingCharacter.value = false;
+  }
+};
+
+const clearCharacterForm = () => {
+  characterDescription.value = '';
+  characterCardOutput.value = '';
+  editInstructions.value = '';
+  window.toastr.success('内容已清空');
+};
+
+// 编辑角色卡
+const handleEditCharacterCard = async () => {
+  if (!editInstructions.value.trim()) {
+    window.toastr.warning('请输入修改说明');
+    return;
+  }
+
+  if (!characterCardOutput.value.trim()) {
+    window.toastr.warning('没有可修改的角色卡');
+    return;
+  }
+
+  try {
+    isEditingCharacter.value = true;
+    window.toastr.info('AI正在修改角色卡，请稍候...');
+
+    const response = await fetch(settings.value.api_endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${settings.value.api_key}`,
+      },
+      body: JSON.stringify({
+        model: settings.value.model || 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: `你是一个专业的角色卡修改专家。请根据用户的修改要求，对现有的角色卡进行修改。
+
+重要：请使用标准的YAML格式，包含正确的缩进和结构。在角色卡中，用户统一用 {{user}} 来表示。
+
+格式要求：
+- 姓名部分只能写中文名，禁止添加英文或括号（如"顾言 (Gu Yan)"应改为"顾言"）
+- 昵称部分不要包含英文，纯中文即可
+- 身高用描述性语言，不要用具体数字
+- 所有括号内容都必须是纯中文
+- 禁止使用Markdown格式符号（如#、*、**、-等），只使用纯YAML格式
+- 不要添加任何注释符号或特殊标记
+
+请根据用户的修改要求，对现有角色卡进行修改，保持原有的结构和风格，只修改用户指定的部分。`,
+          },
+          {
+            role: 'user',
+            content: `现有角色卡：
+${characterCardOutput.value}
+
+修改要求：
+${editInstructions.value}
+
+请根据修改要求，生成修改后的完整角色卡。`,
+          },
+        ],
+        temperature: 0.7,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    characterCardOutput.value = data.choices[0].message.content;
+    editInstructions.value = ''; // 清空编辑说明
+    window.toastr.success('角色卡修改成功！');
+  } catch (error) {
+    console.error('修改角色卡失败:', error);
+    window.toastr.error('修改角色卡失败，请检查网络连接或稍后重试');
+  } finally {
+    isEditingCharacter.value = false;
+  }
+};
+
+// 重置编辑表单
+const resetEditForm = () => {
+  editInstructions.value = '';
+};
+
+const copyCharacterCard = () => {
+  if (!characterCardOutput.value) {
+    window.toastr.warning('没有可复制的内容');
+    return;
+  }
+
+  console.log('开始复制角色卡，内容长度:', characterCardOutput.value.length);
+  console.log('角色卡内容预览:', characterCardOutput.value.substring(0, 100) + '...');
+
+  // 使用统一的复制函数
+  copyToClipboard(characterCardOutput.value, '角色卡已复制到剪贴板');
+};
+
+</script>
+
+<style scoped>
+.tools-tab {
+  height: 100%;
+  overflow-y: auto;
+  padding: 25px !important;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px !important;
+  border-bottom: 1px solid #3a3a3a;
+  margin-bottom: 5px;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 15px !important;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.count-badge {
+  background: #4a9eff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 0 20px 20px;
+}
+
+.tool-item {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.tool-item:hover {
+  border-color: #4a9eff;
+  background: #2d2d2d;
+}
+
+.tool-header {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.tool-header h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tool-description {
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.expand-icon {
+  transition: transform 0.3s ease;
+  color: #888;
+}
+
+.tool-content {
+  margin-top: 15px;
+  padding: 15px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+}
+
+.tool-content-text {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  user-select: text;
+  cursor: text;
+}
+
+.mini-button {
+  padding: 6px 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.mini-button:hover {
+  background: #3a3a3a;
+}
+
+.mini-button.test-button:hover {
+  background: #e0a800;
+  border-color: #e0a800;
+  color: #212529;
+}
+
+/* 反八股工具样式 */
+.anti-cliche-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tool-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-section h5 {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.anti-cliche-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.anti-cliche-textarea:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.tool-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.process-button {
+  background: #4a9eff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.process-button:hover:not(:disabled) {
+  background: #5aaeff;
+}
+
+.process-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.clear-button {
+  background: #666;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-button:hover:not(:disabled) {
+  background: #777;
+}
+
+.clear-button:disabled {
+  background: #444;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.anti-cliche-output {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 12px;
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.output-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 15px 20px;
+  background: #2a2a2a;
+  border-top: 1px solid #3a3a3a;
+  margin: 0;
+}
+
+.copy-button {
+  background: #28a745 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-button:hover {
+  background: #218838 !important;
+}
+
+
+.tool-instructions {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 12px;
+  color: #ccc;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tool-instructions p {
+  margin: 0 0 8px 0;
+}
+
+.tool-instructions p:last-child {
+  margin-bottom: 0;
+}
+
+/* 角色卡生成工具样式 */
+.character-template-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.character-input,
+.character-select,
+.character-textarea {
+  padding: 8px 12px;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.character-input:focus,
+.character-select:focus,
+.character-textarea:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1);
+}
+
+.character-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.generate-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.generate-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.generate-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.character-card-container {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.character-card-textarea {
+  width: 100%;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 0;
+  padding: 20px;
+  max-height: 600px;
+  min-height: 300px;
+  overflow-y: auto;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  scrollbar-width: thin;
+  scrollbar-color: #4a9eff #2a2a2a;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  outline: none;
+}
+
+.character-card-textarea:focus {
+  outline: none;
+  border: none;
+}
+
+.character-card-textarea::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+.character-card-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.character-card-textarea::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.character-card-textarea::-webkit-scrollbar-thumb {
+  background: #4a9eff;
+  border-radius: 4px;
+}
+
+.character-card-textarea::-webkit-scrollbar-thumb:hover {
+  background: #5ba8ff;
+}
+
+.character-card-output pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #e0e0e0;
+}
+
+.character-card-output code {
+  background: transparent;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #e0e0e0;
+}
+
+/* 编辑区域样式 */
+.edit-section {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+.edit-label {
+  display: block;
+  color: #e0e0e0;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 120px;
+  max-height: 200px;
+  padding: 12px;
+  background: #2a2a2a;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.edit-textarea:focus {
+  outline: none;
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.edit-textarea::placeholder {
+  color: #888;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-button {
+  background: #4a9eff !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.edit-button:hover:not(:disabled) {
+  background: #5ba8ff !important;
+}
+
+.edit-button:disabled {
+  background: #666 !important;
+  cursor: not-allowed;
+}
+
+.reset-button {
+  background: #666 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.reset-button:hover {
+  background: #777 !important;
+}
+
+/* 美化按钮的悬停效果 */
+.process-button:hover:not(:disabled) .shimmer-effect,
+.clear-button:hover:not(:disabled) .shimmer-effect,
+.generate-button:hover:not(:disabled) .shimmer-effect,
+.copy-button:hover .shimmer-effect {
+  left: 100%;
+}
+
+.process-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.clear-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.generate-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.copy-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+
+
+.process-button:disabled,
+.clear-button:disabled,
+.generate-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
