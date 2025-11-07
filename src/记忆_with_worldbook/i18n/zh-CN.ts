@@ -98,17 +98,6 @@ export default {
     clearConfigConfirm: '确定要清空所有开场白的配置吗？',
     clearSuccess: '配置已清空',
     help: '使用帮助',
-    helpContent: `
-      <h3>功能说明</h3>
-      <p>为角色卡的多个开场白设置图标、标题、描述，并生成可视化选择界面。</p>
-      <h3>使用步骤</h3>
-      <ol>
-        <li>在酒馆中打开一个角色卡</li>
-        <li>为每个开场白配置图标（emoji或URL）、标题和描述</li>
-        <li>点击"AI生成界面样式"按钮，输入你想要的风格描述</li>
-        <li>预览生成的界面，满意后复制代码到酒馆的正则表达式中</li>
-      </ol>
-    `,
     greetingBadge: '开场白',
     default: '默认',
     icon: '图标',
@@ -136,17 +125,6 @@ export default {
   regex: {
     title: 'UI 生成器',
     help: '使用帮助',
-    helpContent: `
-      <h3>功能说明</h3>
-      <p>使用 AI 根据你的描述生成可视化的 UI 界面，并自动转换为酒馆正则表达式格式。</p>
-      <h3>使用步骤</h3>
-      <ol>
-        <li>在"触发文本"中输入触发关键词（例如：#状态栏）</li>
-        <li>在"UI描述"中详细描述你想要的界面效果</li>
-        <li>点击"生成UI"，AI会生成对应的HTML界面</li>
-        <li>在右侧预览效果，满意后复制代码到酒馆正则中</li>
-      </ol>
-    `,
     triggerText: '触发文本',
     triggerTextPlaceholder: '例如：#状态栏',
     uiDescription: 'UI 描述',

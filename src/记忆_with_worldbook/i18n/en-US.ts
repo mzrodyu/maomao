@@ -98,17 +98,6 @@ export default {
     clearConfigConfirm: 'Are you sure you want to clear all greeting configurations?',
     clearSuccess: 'Configuration cleared',
     help: 'Help',
-    helpContent: `
-      <h3>Features</h3>
-      <p>Set icons, titles, and descriptions for multiple character greetings, and generate a visual selection interface.</p>
-      <h3>How to Use</h3>
-      <ol>
-        <li>Open a character card in SillyTavern</li>
-        <li>Configure icon (emoji or URL), title, and description for each greeting</li>
-        <li>Click "Generate Style with AI" and describe your desired style</li>
-        <li>Preview the generated interface, then copy the code to SillyTavern regex</li>
-      </ol>
-    `,
     greetingBadge: 'Greeting',
     default: 'Default',
     icon: 'Icon',
@@ -136,17 +125,6 @@ export default {
   regex: {
     title: 'UI Generator',
     help: 'Help',
-    helpContent: `
-      <h3>Features</h3>
-      <p>Use AI to generate visual UI based on your description, and automatically convert it to SillyTavern regex format.</p>
-      <h3>How to Use</h3>
-      <ol>
-        <li>Enter trigger text (e.g., #status)</li>
-        <li>Describe your desired UI effect in detail</li>
-        <li>Click "Generate UI" and AI will create the HTML interface</li>
-        <li>Preview on the right, then copy the code to SillyTavern regex</li>
-      </ol>
-    `,
     triggerText: 'Trigger Text',
     triggerTextPlaceholder: 'e.g., #status',
     uiDescription: 'UI Description',
