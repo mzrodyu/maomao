@@ -1357,7 +1357,12 @@ async function generateStyleWithAI(styleDescription: string) {
 - body 必须使用 "min-height: 100vh; height: auto;" 而不是固定高度
 - body 必须使用 "display: flex; align-items: center; justify-content: center;" 来居中内容
 - .container 不要设置固定高度，使用 "height: auto;" 让内容自适应
-- 确保所有内容都能完整显示，不会被截断`;
+- 确保所有内容都能完整显示，不会被截断
+
+【重要】HTML结构必须严格遵守：
+- 必须有一个 class="scene-grid" 的div作为卡片容器
+- 所有卡片必须在 scene-grid 容器内
+- 不要改变scene-grid这个类名，不要用grid-container、cards-grid等其他名字`;
 
     // 提供完整的 switchGreeting 函数代码
     const switchGreetingCode = `async function switchGreeting(id) {
@@ -1715,21 +1720,38 @@ function updatePreview() {
       // 查找 scene-grid 容器并替换内容
       let customHtml = uiConfig.value.customHtml;
 
-      // 尝试查找并替换 scene-grid 的内容
-      const sceneGridPattern = /(<div[^>]*class="scene-grid"[^>]*>)([\s\S]*?)(<\/div>)/i;
-      const match = customHtml.match(sceneGridPattern);
+      // 尝试多种可能的容器类名
+      const possiblePatterns = [
+        /(<div[^>]*class="scene-grid"[^>]*>)([\s\S]*?)(<\/div>)/i,
+        /(<div[^>]*class="[^"]*grid[^"]*"[^>]*>)([\s\S]*?)(<\/div>)/i,
+        /(<div[^>]*class="[^"]*cards[^"]*"[^>]*>)([\s\S]*?)(<\/div>)/i,
+        /(<div[^>]*class="[^"]*container[^"]*"[^>]*>[\s\S]*?<div[^>]*class="[^"]*grid[^"]*"[^>]*>)([\s\S]*?)(<\/div>)/i,
+      ];
 
-      if (match) {
-        // 替换 scene-grid 内的内容
-        customHtml = customHtml.replace(sceneGridPattern, `$1\n${cardsHtml}\n      $3`);
+      for (const pattern of possiblePatterns) {
+        const match = customHtml.match(pattern);
+        if (match) {
+          // 替换找到的容器内的内容
+          customHtml = customHtml.replace(pattern, `$1\n${cardsHtml}\n      $3`);
+          previewHtml.value = customHtml;
+          console.log('✅ 自定义HTML预览更新成功（字符串替换）');
+          return;
+        }
+      }
+
+      // 如果都找不到，尝试在body结束标签前插入
+      console.warn('⚠️ 未找到合适的卡片容器，尝试在body中插入');
+      const bodyPattern = /(<body[^>]*>)([\s\S]*?)(<\/body>)/i;
+      const bodyMatch = customHtml.match(bodyPattern);
+      if (bodyMatch) {
+        customHtml = customHtml.replace(bodyPattern, `$1$2\n<div class="scene-grid">\n${cardsHtml}\n</div>\n$3`);
         previewHtml.value = customHtml;
-        console.log('✅ 自定义HTML预览更新成功（字符串替换）');
-        return;
-      } else {
-        console.warn('⚠️ 自定义HTML中未找到 .scene-grid 容器，使用原始HTML');
-        previewHtml.value = uiConfig.value.customHtml;
+        console.log('✅ 已在body中插入卡片');
         return;
       }
+
+      console.warn('⚠️ 无法处理自定义HTML，使用原始HTML');
+      previewHtml.value = uiConfig.value.customHtml;
     } catch (error) {
       console.error('❌ 解析自定义HTML失败:', error);
       toastr.warning('自定义HTML解析失败，使用默认样式');
