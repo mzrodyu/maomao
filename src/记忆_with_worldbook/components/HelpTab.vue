@@ -25,33 +25,62 @@
       <h2 style="margin: 0 0 10px 0; color: #4a9eff; font-size: 24px; font-weight: 600">mzrodyu猫猫的小破烂</h2>
       <div style="color: #888; font-size: 14px; margin-bottom: 15px">版本 v1.34</div>
 
-      <!-- 检查更新按钮 -->
-      <button
-        @click="checkUpdate"
-        style="
-          padding: 8px 20px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          border-radius: 20px;
-          color: white;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        "
-        @mouseenter="
-          $event.target.style.transform = 'translateY(-2px)';
-          $event.target.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
-        "
-        @mouseleave="
-          $event.target.style.transform = 'translateY(0)';
-          $event.target.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
-        "
-      >
-        <i class="fa-solid fa-rotate" style="margin-right: 6px"></i>
-        检查更新
-      </button>
+      <!-- 按钮组 -->
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap">
+        <button
+          @click="checkUpdate"
+          style="
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+          "
+          @mouseenter="
+            $event.target.style.transform = 'translateY(-2px)';
+            $event.target.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+          "
+          @mouseleave="
+            $event.target.style.transform = 'translateY(0)';
+            $event.target.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
+          "
+        >
+          <i class="fa-solid fa-rotate" style="margin-right: 6px"></i>
+          检查更新
+        </button>
+
+        <button
+          @click="downloadLatest"
+          style="
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+          "
+          @mouseenter="
+            $event.target.style.transform = 'translateY(-2px)';
+            $event.target.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.4)';
+          "
+          @mouseleave="
+            $event.target.style.transform = 'translateY(0)';
+            $event.target.style.boxShadow = '0 2px 8px rgba(40, 167, 69, 0.3)';
+          "
+        >
+          <i class="fa-solid fa-download" style="margin-right: 6px"></i>
+          下载最新版本
+        </button>
+      </div>
 
       <!-- 版权声明 -->
       <div
@@ -727,6 +756,58 @@ const expandedSections = ref({
 // 检查更新
 const checkUpdate = () => {
   checkForUpdates(true);
+};
+
+// 下载最新版本
+const downloadLatest = async () => {
+  try {
+    window.toastr.info('正在获取最新版本信息...', '下载中', { timeOut: 2000 });
+
+    // 1. 获取最新版本号
+    const timestamp = Date.now();
+    const versionResponse = await fetch(
+      `https://testingcf.jsdelivr.net/gh/mzrodyu/maomao/dist/记忆_with_worldbook/version.json?_=${timestamp}`,
+    );
+
+    if (!versionResponse.ok) {
+      throw new Error('无法获取版本信息');
+    }
+
+    const versionInfo = await versionResponse.json();
+    const version = versionInfo.version;
+
+    window.toastr.info(`正在下载 v${version}...`, '下载中', { timeOut: 2000 });
+
+    // 2. 下载对应版本的 JSON 文件
+    const jsonUrl = `https://testingcf.jsdelivr.net/gh/mzrodyu/maomao/dist/记忆_with_worldbook/猫猫的写卡小工具 v${version}.json?_=${timestamp}`;
+    const jsonResponse = await fetch(jsonUrl);
+
+    if (!jsonResponse.ok) {
+      throw new Error(`下载失败: HTTP ${jsonResponse.status}`);
+    }
+
+    const jsonContent = await jsonResponse.text();
+
+    // 3. 创建下载链接
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `猫猫的写卡小工具 v${version}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    window.toastr.success(
+      `v${version} 已下载完成，请在酒馆脚本库重新导入该文件`,
+      '下载成功',
+      { timeOut: 8000 },
+    );
+  } catch (error: any) {
+    console.error('下载失败:', error);
+    window.toastr.error('下载失败: ' + error.message, '错误', { timeOut: 5000 });
+  }
 };
 </script>
 
