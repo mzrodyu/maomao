@@ -19,14 +19,33 @@
     >
       <div class="header-left" style="display: flex; align-items: center; gap: 10px">
         <span style="font-size: 24px">🐱</span>
-        <b class="panel-title">mzrodyu猫猫的小破烂</b>
-        <b class="panel-title-mobile">猫猫的小破烂</b>
+        <b class="panel-title">{{ t('panel.title') }}</b>
+        <b class="panel-title-mobile">{{ currentLocale === 'zh-CN' ? '猫猫的小破烂' : "mzrodyu's Tool" }}</b>
       </div>
-      <div style="display: flex; gap: 10px">
+      <div style="display: flex; gap: 10px; align-items: center">
+        <!-- 语言切换按钮 -->
+        <div
+          class="language-button"
+          style="
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          "
+          :title="currentLocale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+          @click="toggleLanguage"
+        >
+          <i class="fa-solid fa-language"></i>
+          <span>{{ currentLocale === 'zh-CN' ? 'EN' : '中' }}</span>
+        </div>
         <div
           class="minimize-button"
           style="cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: background 0.2s"
-          title="最小化"
+          :title="t('panel.minimize')"
           @click="minimizePanel"
         >
           <i class="fa-solid fa-minus"></i>
@@ -34,7 +53,7 @@
         <div
           class="close-button"
           style="cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: background 0.2s"
-          title="关闭"
+          :title="currentLocale === 'zh-CN' ? '关闭' : 'Close'"
           @click="closePanel"
         >
           <i class="fa-solid fa-times"></i>
@@ -94,6 +113,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { minimizeMemoryPanel } from '../浮动面板';
 import GreetingsTab from './GreetingsTab.vue';
 import HelpTab from './HelpTab.vue';
@@ -106,19 +126,22 @@ import SummaryTab from './SummaryTab.vue';
 import TableTab from './TableTab.vue';
 import ToolsTab from './ToolsTab.vue';
 
-// 标签页配置
-const tabs = [
-  { key: 'settings', label: '设置', icon: 'fa-solid fa-cog' },
-  { key: 'summary', label: '历史总结', icon: 'fa-solid fa-list' },
-  { key: 'table', label: '表格', icon: 'fa-solid fa-table' },
-  { key: 'greetings', label: '开场白', icon: 'fa-solid fa-comments' },
-  { key: 'regex', label: '界面生成器', icon: 'fa-solid fa-code' },
-  { key: 'status', label: '状态栏生成', icon: 'fa-solid fa-chart-bar' },
-  { key: 'project', label: '前端项目', icon: 'fa-solid fa-laptop-code' },
-  { key: 'tools', label: '工具模板', icon: 'fa-solid fa-tools' },
-  { key: 'mvu', label: 'MVU Beta', icon: 'fa-solid fa-flask' },
-  { key: 'help', label: '帮助', icon: 'fa-solid fa-question-circle' },
-];
+const { t, locale } = useI18n();
+const currentLocale = computed(() => locale.value);
+
+// 标签页配置（使用计算属性以响应语言变化）
+const tabs = computed(() => [
+  { key: 'settings', label: t('tabs.settings'), icon: 'fa-solid fa-cog' },
+  { key: 'summary', label: t('tabs.history'), icon: 'fa-solid fa-list' },
+  { key: 'table', label: t('tabs.table'), icon: 'fa-solid fa-table' },
+  { key: 'greetings', label: t('tabs.greetings'), icon: 'fa-solid fa-comments' },
+  { key: 'regex', label: t('tabs.regex'), icon: 'fa-solid fa-code' },
+  { key: 'status', label: t('tabs.state'), icon: 'fa-solid fa-chart-bar' },
+  { key: 'project', label: t('tabs.projects'), icon: 'fa-solid fa-laptop-code' },
+  { key: 'tools', label: t('tabs.tools'), icon: 'fa-solid fa-tools' },
+  { key: 'mvu', label: t('tabs.mvu'), icon: 'fa-solid fa-flask' },
+  { key: 'help', label: t('tabs.help'), icon: 'fa-solid fa-question-circle' },
+]);
 
 const activeTab = ref<
   'settings' | 'summary' | 'table' | 'greetings' | 'status' | 'regex' | 'project' | 'tools' | 'mvu' | 'help'
@@ -150,6 +173,14 @@ const componentProps = computed(() => ({
 const switchTab = (tabKey: string) => {
   console.log('切换标签页:', tabKey);
   activeTab.value = tabKey as any;
+};
+
+// 切换语言
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN';
+  locale.value = newLocale;
+  localStorage.setItem('maomao_tool_locale', newLocale);
+  toastr.success(newLocale === 'zh-CN' ? '已切换到中文' : 'Switched to English');
 };
 
 // 最小化面板
@@ -186,6 +217,17 @@ const closePanel = () => {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.language-button {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.language-button:hover {
+  background: rgba(74, 158, 255, 0.2);
 }
 
 .minimize-button {

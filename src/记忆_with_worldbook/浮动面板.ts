@@ -1,5 +1,6 @@
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
+import i18n from './i18n';
 import 浮动面板 from './浮动面板.vue';
 
 $(() => {
@@ -366,7 +367,7 @@ $(() => {
     // 创建新的 Vue 应用
     console.log('准备创建新的 Vue 应用，面板容器:', panelContainer[0]);
 
-    const app = createApp(浮动面板).use(createPinia());
+    const app = createApp(浮动面板).use(createPinia()).use(i18n);
 
     try {
       app.mount(panelContainer[0]);
