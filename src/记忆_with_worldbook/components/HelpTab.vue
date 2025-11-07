@@ -269,11 +269,9 @@
             </div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v134.date') }}</div>
           </div>
-          <ul class="update-list">
-            <li v-for="feature in t('helpPage.updates.v134.features')" :key="feature" class="update-item">
-              {{ feature }}
-            </li>
-          </ul>
+                 <ul class="update-list">
+                   <li v-for="(feature, index) in t('helpPage.updates.v134.features')" :key="index" class="update-item" v-html="feature"></li>
+                 </ul>
         </div>
 
         <!-- v1.33 -->
@@ -294,11 +292,9 @@
             </div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v133.date') }}</div>
           </div>
-          <ul class="update-list">
-            <li v-for="feature in t('helpPage.updates.v133.features')" :key="feature" class="update-item">
-              {{ feature }}
-            </li>
-          </ul>
+                 <ul class="update-list">
+                   <li v-for="(feature, index) in t('helpPage.updates.v133.features')" :key="index" class="update-item" v-html="feature"></li>
+                 </ul>
         </div>
 
         <!-- v1.32 -->
@@ -321,7 +317,7 @@
               {{ t('helpPage.updates.v132.optimize') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="opt in t('helpPage.updates.v132.optimizeFeatures')" :key="opt">{{ opt }}</li>
+              <li v-for="(opt, index) in t('helpPage.updates.v132.optimizeFeatures')" :key="index" v-html="opt"></li>
             </ul>
           </div>
         </div>
@@ -346,7 +342,7 @@
               {{ t('helpPage.updates.v131.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v131.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v131.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
           <div style="margin-bottom: 15px">
@@ -354,7 +350,7 @@
               {{ t('helpPage.updates.v131.optimize') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="opt in t('helpPage.updates.v131.optimizeFeatures')" :key="opt">{{ opt }}</li>
+              <li v-for="(opt, index) in t('helpPage.updates.v131.optimizeFeatures')" :key="index" v-html="opt"></li>
             </ul>
           </div>
         </div>
@@ -379,7 +375,7 @@
               {{ t('helpPage.updates.v130.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v130.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v130.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
           <div style="margin-bottom: 15px">
@@ -387,7 +383,7 @@
               {{ t('helpPage.updates.v130.optimize') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="opt in t('helpPage.updates.v130.optimizeFeatures')" :key="opt">{{ opt }}</li>
+              <li v-for="(opt, index) in t('helpPage.updates.v130.optimizeFeatures')" :key="index" v-html="opt"></li>
             </ul>
           </div>
         </div>
@@ -412,7 +408,7 @@
               {{ t('helpPage.updates.v129.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v129.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v129.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
         </div>
@@ -437,7 +433,7 @@
               {{ t('helpPage.updates.v128.majorUpdate') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v128.majorUpdateList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v128.majorUpdateList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
         </div>
@@ -462,7 +458,7 @@
               {{ t('helpPage.updates.v127.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v127.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v127.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
         </div>
@@ -487,7 +483,7 @@
               {{ t('helpPage.updates.v126.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v126.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v126.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
         </div>
@@ -512,7 +508,7 @@
               {{ t('helpPage.updates.v125.newFeatures') }}
             </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-              <li v-for="feature in t('helpPage.updates.v125.newFeaturesList')" :key="feature">{{ feature }}</li>
+              <li v-for="(feature, index) in t('helpPage.updates.v125.newFeaturesList')" :key="index" v-html="feature"></li>
             </ul>
           </div>
         </div>
@@ -533,7 +529,7 @@
           </div>
 
           <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
-            <li v-for="feature in t('helpPage.updates.v100.features')" :key="feature">{{ feature }}</li>
+            <li v-for="(feature, index) in t('helpPage.updates.v100.features')" :key="index" v-html="feature"></li>
           </ul>
         </div>
       </div>
