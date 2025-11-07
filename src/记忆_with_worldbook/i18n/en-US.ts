@@ -102,7 +102,7 @@ export default {
     default: 'Default',
     icon: 'Icon',
     iconPlaceholder: 'emoji or image URL',
-    title: 'Title',
+    greetingTitle: 'Title',
     titlePlaceholder: 'Greeting title',
     description: 'Description',
     descriptionPlaceholder: 'Greeting description',

@@ -102,7 +102,7 @@ export default {
     default: '默认',
     icon: '图标',
     iconPlaceholder: 'emoji 或图片URL',
-    title: '标题',
+    greetingTitle: '标题',
     titlePlaceholder: '开场白标题',
     description: '描述',
     descriptionPlaceholder: '开场白描述',
