@@ -151,25 +151,18 @@
         <i
           :class="expandedSections.usage ? 'fa-chevron-up' : 'fa-chevron-down'"
           class="fa-solid"
-          style="
-            margin-left: auto;
-            font-size: 14px;
-            transition: transform 0.3s;
-            color: #888;
-          "
+          style="margin-left: auto; font-size: 14px; transition: transform 0.3s; color: #888"
         ></i>
       </h3>
 
       <div
         v-show="expandedSections.usage"
-        style="
-          color: #e0e0e0;
-          font-size: 14px;
-          line-height: 1.8;
-          animation: fadeIn 0.3s ease-in;
-        "
+        style="color: #e0e0e0; font-size: 14px; line-height: 1.8; animation: fadeIn 0.3s ease-in"
       >
-        <h4 style="color: #4a9eff; margin-top: 0; margin-bottom: 15px; font-size: 16px" v-html="t('helpPage.features.title')"></h4>
+        <h4
+          style="color: #4a9eff; margin-top: 0; margin-bottom: 15px; font-size: 16px"
+          v-html="t('helpPage.features.title')"
+        ></h4>
         <ul style="margin: 5px 0; padding-left: 20px">
           <li v-html="t('helpPage.features.summary')"></li>
           <li v-html="t('helpPage.features.cardAssist')"></li>
@@ -178,7 +171,10 @@
           <li v-html="t('helpPage.features.others')"></li>
         </ul>
 
-        <h4 style="color: #4a9eff; margin-top: 25px; margin-bottom: 15px; font-size: 16px" v-html="t('helpPage.usage.title')"></h4>
+        <h4
+          style="color: #4a9eff; margin-top: 25px; margin-bottom: 15px; font-size: 16px"
+          v-html="t('helpPage.usage.title')"
+        ></h4>
         <div
           style="
             background: rgba(220, 53, 69, 0.1);
@@ -188,7 +184,10 @@
             margin-bottom: 15px;
           "
         >
-          <div style="color: #dc3545; font-weight: 600; margin-bottom: 8px" v-html="t('helpPage.usage.apiConfig')"></div>
+          <div
+            style="color: #dc3545; font-weight: 600; margin-bottom: 8px"
+            v-html="t('helpPage.usage.apiConfig')"
+          ></div>
           <div style="font-size: 13px; color: #e0e0e0; line-height: 1.6">
             <div style="margin-bottom: 8px">
               <span v-html="t('helpPage.usage.apiFormats')"></span>
@@ -244,23 +243,13 @@
         <i
           :class="expandedSections.changelog ? 'fa-chevron-up' : 'fa-chevron-down'"
           class="fa-solid"
-          style="
-            margin-left: auto;
-            font-size: 14px;
-            transition: transform 0.3s;
-            color: #888;
-          "
+          style="margin-left: auto; font-size: 14px; transition: transform 0.3s; color: #888"
         ></i>
       </h3>
 
       <div
         v-show="expandedSections.changelog"
-        style="
-          color: #e0e0e0;
-          font-size: 14px;
-          line-height: 1.8;
-          animation: fadeIn 0.3s ease-in;
-        "
+        style="color: #e0e0e0; font-size: 14px; line-height: 1.8; animation: fadeIn 0.3s ease-in"
       >
         <!-- v1.34 -->
         <div
@@ -274,14 +263,7 @@
         >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px">
             <div
-              style="
-                font-size: 16px;
-                font-weight: 600;
-                color: #4caf50;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-              "
+              style="font-size: 16px; font-weight: 600; color: #4caf50; display: flex; align-items: center; gap: 8px"
             >
               v1.34
             </div>
@@ -306,14 +288,7 @@
         >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px">
             <div
-              style="
-                font-size: 16px;
-                font-weight: 600;
-                color: #ff9800;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-              "
+              style="font-size: 16px; font-weight: 600; color: #ff9800; display: flex; align-items: center; gap: 8px"
             >
               v1.33 - {{ t('helpPage.updates.v133.title') }}
             </div>
@@ -327,14 +302,24 @@
         </div>
 
         <!-- v1.32 -->
-        <div style="padding: 20px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #6366f1">v1.32</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v132.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v132.optimize') }}</div>
+            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v132.optimize') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="opt in t('helpPage.updates.v132.optimizeFeatures')" :key="opt">{{ opt }}</li>
             </ul>
@@ -342,20 +327,32 @@
         </div>
 
         <!-- v1.31 -->
-        <div style="padding: 20px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #6366f1">v1.31</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v131.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v131.newFeatures') }}</div>
+            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v131.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v131.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
           </div>
           <div style="margin-bottom: 15px">
-            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v131.optimize') }}</div>
+            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v131.optimize') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="opt in t('helpPage.updates.v131.optimizeFeatures')" :key="opt">{{ opt }}</li>
             </ul>
@@ -363,20 +360,32 @@
         </div>
 
         <!-- v1.30 -->
-        <div style="padding: 20px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #6366f1">v1.30</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v130.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v130.newFeatures') }}</div>
+            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v130.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v130.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
           </div>
           <div style="margin-bottom: 15px">
-            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v130.optimize') }}</div>
+            <div style="color: #6366f1; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v130.optimize') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="opt in t('helpPage.updates.v130.optimizeFeatures')" :key="opt">{{ opt }}</li>
             </ul>
@@ -384,14 +393,24 @@
         </div>
 
         <!-- v1.29 -->
-        <div style="padding: 20px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #6366f1">v1.29</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v129.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v129.newFeatures') }}</div>
+            <div style="color: #10b981; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v129.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v129.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
@@ -399,14 +418,24 @@
         </div>
 
         <!-- v1.28 -->
-        <div style="padding: 20px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 4px solid #6366f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #6366f1">v1.28</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v128.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #dc3545; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v128.majorUpdate') }}</div>
+            <div style="color: #dc3545; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v128.majorUpdate') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v128.majorUpdateList')" :key="feature">{{ feature }}</li>
             </ul>
@@ -414,14 +443,24 @@
         </div>
 
         <!-- v1.27 -->
-        <div style="padding: 20px; background: rgba(40, 167, 69, 0.05); border-left: 4px solid #28a745; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.05);
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #28a745">v1.27</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v127.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v127.newFeatures') }}</div>
+            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v127.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v127.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
@@ -429,14 +468,24 @@
         </div>
 
         <!-- v1.26 -->
-        <div style="padding: 20px; background: rgba(40, 167, 69, 0.05); border-left: 4px solid #28a745; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.05);
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #28a745">v1.26</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v126.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v126.newFeatures') }}</div>
+            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v126.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v126.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
@@ -444,14 +493,24 @@
         </div>
 
         <!-- v1.25 -->
-        <div style="padding: 20px; background: rgba(40, 167, 69, 0.05); border-left: 4px solid #28a745; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.05);
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #28a745">v1.25</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v125.date') }}</div>
           </div>
 
           <div style="margin-bottom: 15px">
-            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">{{ t('helpPage.updates.v125.newFeatures') }}</div>
+            <div style="color: #28a745; font-weight: 600; margin-bottom: 8px">
+              {{ t('helpPage.updates.v125.newFeatures') }}
+            </div>
             <ul style="margin: 5px 0; padding-left: 20px; font-size: 14px">
               <li v-for="feature in t('helpPage.updates.v125.newFeaturesList')" :key="feature">{{ feature }}</li>
             </ul>
@@ -459,7 +518,15 @@
         </div>
 
         <!-- v1.0.0 -->
-        <div style="padding: 20px; background: rgba(220, 53, 69, 0.05); border-left: 4px solid #dc3545; border-radius: 8px; margin-bottom: 15px">
+        <div
+          style="
+            padding: 20px;
+            background: rgba(220, 53, 69, 0.05);
+            border-left: 4px solid #dc3545;
+            border-radius: 8px;
+            margin-bottom: 15px;
+          "
+        >
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
             <div style="font-size: 16px; font-weight: 600; color: #dc3545">v1.0.0</div>
             <div style="font-size: 13px; color: #888">{{ t('helpPage.updates.v100.date') }}</div>
@@ -482,7 +549,9 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1);
       "
     >
-      <div style="margin-bottom: 8px">{{ t('helpPage.madeWith') }} <span style="color: #dc3545">❤️</span> {{ t('helpPage.by') }} mzrodyu</div>
+      <div style="margin-bottom: 8px">
+        {{ t('helpPage.madeWith') }} <span style="color: #dc3545">❤️</span> {{ t('helpPage.by') }} mzrodyu
+      </div>
       <div style="font-size: 12px">
         {{ t('helpPage.basedOn') }}
         <a
@@ -556,7 +625,9 @@ const downloadLatest = async () => {
 
     if (!jsonResponse.ok) {
       throw new Error(
-        currentLocale.value === 'zh-CN' ? `下载失败: HTTP ${jsonResponse.status}` : `Download failed: HTTP ${jsonResponse.status}`,
+        currentLocale.value === 'zh-CN'
+          ? `下载失败: HTTP ${jsonResponse.status}`
+          : `Download failed: HTTP ${jsonResponse.status}`,
       );
     }
 

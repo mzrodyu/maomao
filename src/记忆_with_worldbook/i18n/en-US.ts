@@ -128,7 +128,8 @@ export default {
     triggerText: 'Trigger Text',
     triggerTextPlaceholder: 'e.g., #status',
     uiDescription: 'UI Description',
-    uiDescriptionPlaceholder: 'Describe your desired UI in detail, e.g.: Game-style status bar showing HP, MP, EXP with progress bars',
+    uiDescriptionPlaceholder:
+      'Describe your desired UI in detail, e.g.: Game-style status bar showing HP, MP, EXP with progress bars',
     generateUI: 'Generate UI',
     generating: 'Generating...',
     preview: 'Preview',
@@ -213,8 +214,10 @@ export default {
     features: {
       title: '📋 Features',
       summary: '<strong>Summary:</strong> Auto/manual chat summary, save to World Info',
-      cardAssist: '<strong>Card Assistant:</strong> Generate character cards, World Info entries, supports streaming and AI modification',
-      statusBar: '<strong>Status Bar Generator:</strong> Visual status bar configuration, generate regex JSON and World Info entries',
+      cardAssist:
+        '<strong>Card Assistant:</strong> Generate character cards, World Info entries, supports streaming and AI modification',
+      statusBar:
+        '<strong>Status Bar Generator:</strong> Visual status bar configuration, generate regex JSON and World Info entries',
       mvu: '<strong>MVU Beta:</strong> Generate variable structure, prompt templates, $meta configuration',
       others: '<strong>Others:</strong> Remove clichés, regex UI generator, project manager, table generator',
     },
