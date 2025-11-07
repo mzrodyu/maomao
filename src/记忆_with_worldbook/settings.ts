@@ -82,19 +82,17 @@ export function normalizeApiEndpoint(endpoint: string, path: string = '/chat/com
   return baseUrl + path;
 }
 
-export const useSettingsStore = defineStore('settings', () => {
-  // 使用全局的安全获取函数
-  const getScriptIdSafely = () => getScriptIdSafe();
+// 固定的全局变量key，确保版本更新后数据不丢失
+const SETTINGS_GLOBAL_KEY = 'maomao_tool_settings';
 
+export const useSettingsStore = defineStore('settings', () => {
   // 检测是否在本地调试环境（没有酒馆助手）
   const isLocalDebug = () => {
-    return typeof getVariables !== 'function' || !getScriptIdSafely();
+    return typeof getVariables !== 'function';
   };
 
   // 初始化设置
   const initSettings = () => {
-    const script_id = getScriptIdSafely();
-
     // 本地调试：使用 localStorage
     if (isLocalDebug()) {
       console.warn('🔧 本地调试模式：使用 localStorage 存储设置');
@@ -109,34 +107,38 @@ export const useSettingsStore = defineStore('settings', () => {
       return ref(Settings.parse({}));
     }
 
-    // 正常模式：使用酒馆变量
+    // 正常模式：使用全局变量（不绑定script_id，确保版本更新后数据不丢失）
     try {
-      return ref(Settings.parse(getVariables({ type: 'script', script_id })));
+      const globalVars = getVariables({ type: 'global' });
+      const savedSettings = globalVars[SETTINGS_GLOBAL_KEY];
+      if (savedSettings) {
+        console.log('📦 从全局变量加载设置');
+        return ref(Settings.parse(savedSettings));
+      }
     } catch (e) {
-      console.warn('读取变量失败，使用默认设置:', e);
-      return ref(Settings.parse({}));
+      console.warn('读取全局变量失败，使用默认设置:', e);
     }
+    return ref(Settings.parse({}));
   };
 
   const settings = initSettings();
 
-  // 在初始化后尝试读取真实变量
+  // 在初始化后尝试读取真实变量（使用全局变量）
   setTimeout(() => {
     if (isLocalDebug()) {
       console.log('🔧 本地调试模式：跳过酒馆变量读取');
       return;
     }
 
-    const script_id = getScriptIdSafely();
-    if (script_id) {
-      try {
-        const realVariables = getVariables({ type: 'script', script_id });
-        if (realVariables && Object.keys(realVariables).length > 0) {
-          settings.value = Settings.parse(realVariables);
-        }
-      } catch (e) {
-        console.warn('读取真实变量失败，使用初始值:', e);
+    try {
+      const globalVars = getVariables({ type: 'global' });
+      const savedSettings = globalVars[SETTINGS_GLOBAL_KEY];
+      if (savedSettings && Object.keys(savedSettings).length > 0) {
+        settings.value = Settings.parse(savedSettings);
+        console.log('✅ 从全局变量重新加载设置成功');
       }
+    } catch (e) {
+      console.warn('读取真实变量失败，使用初始值:', e);
     }
   }, 200);
 
@@ -154,15 +156,10 @@ export const useSettingsStore = defineStore('settings', () => {
       return;
     }
 
-    // 正常模式：保存到酒馆变量
-    const script_id = getScriptIdSafely();
-    if (!script_id) {
-      console.warn('无法保存设置，script_id 为 null');
-      return;
-    }
+    // 正常模式：保存到全局变量（不绑定script_id，确保版本更新后数据不丢失）
     try {
-      console.log('💾 立即保存设置到酒馆变量:', klona(new_settings));
-      insertOrAssignVariables(klona(new_settings), { type: 'script', script_id });
+      console.log('💾 立即保存设置到全局变量:', klona(new_settings));
+      insertOrAssignVariables({ [SETTINGS_GLOBAL_KEY]: klona(new_settings) }, { type: 'global' });
       console.log('✅ 设置已保存');
     } catch (e) {
       console.error('❌ 保存设置失败:', e);
@@ -207,16 +204,10 @@ export const useSettingsStore = defineStore('settings', () => {
       }
     }
 
-    // 正常模式：保存到酒馆变量
-    const script_id = getScriptIdSafely();
-    if (!script_id) {
-      console.warn('无法保存设置，script_id 为 null');
-      window.toastr?.error('无法保存设置：script_id 为空');
-      return false;
-    }
+    // 正常模式：保存到全局变量（确保版本更新后数据不丢失）
     try {
-      console.log('💾 手动保存设置:', klona(settings.value));
-      insertOrAssignVariables(klona(settings.value), { type: 'script', script_id });
+      console.log('💾 手动保存设置到全局变量:', klona(settings.value));
+      insertOrAssignVariables({ [SETTINGS_GLOBAL_KEY]: klona(settings.value) }, { type: 'global' });
       window.toastr?.success('设置已保存');
       return true;
     } catch (e) {
@@ -228,15 +219,16 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 重新加载设置函数
   const reloadSettings = () => {
-    const script_id = getScriptIdSafely();
-    if (!script_id) {
-      console.warn('无法重新加载设置，script_id 为 null');
+    if (isLocalDebug()) {
+      console.warn('本地调试模式：无法重新加载酒馆变量');
       return false;
     }
+
     try {
-      const realVariables = getVariables({ type: 'script', script_id });
-      if (realVariables && Object.keys(realVariables).length > 0) {
-        settings.value = Settings.parse(realVariables);
+      const globalVars = getVariables({ type: 'global' });
+      const savedSettings = globalVars[SETTINGS_GLOBAL_KEY];
+      if (savedSettings && Object.keys(savedSettings).length > 0) {
+        settings.value = Settings.parse(savedSettings);
         console.log('✅ 设置重新加载成功:', settings.value);
         window.toastr?.success('设置已重新加载');
         return true;
