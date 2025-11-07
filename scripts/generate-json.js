@@ -9,10 +9,10 @@ const path = require('path');
 const configs = [
   {
     jsPath: 'dist/记忆_with_worldbook/index.js',
-    outputPath: 'dist/记忆_with_worldbook/猫猫的写卡小工具 v1.33.json',
+    outputPath: 'dist/记忆_with_worldbook/猫猫的写卡小工具 v1.34.json',
     id: 'memory-with-worldbook',
-    name: '猫猫的写卡小工具 v1.33',
-    info: '记忆管理脚本 - 支持世界书条目生成、查看和自动总结、开场白管理器',
+    name: '猫猫的写卡小工具 v1.34',
+    info: '记忆管理脚本 - 支持世界书条目生成、查看和自动总结、开场白管理器、多语言切换',
   },
   {
     jsPath: 'dist/记忆/index.js',
