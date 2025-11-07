@@ -80,7 +80,7 @@ export function getScriptIdSafe(): string {
   if (globalScriptId) {
     return globalScriptId;
   }
-  
+
   try {
     const id = getScriptId();
     // 缓存ID以供后续使用
